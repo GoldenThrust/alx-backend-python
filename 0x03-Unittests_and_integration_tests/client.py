@@ -41,7 +41,7 @@ class GithubOrgClient:
         """Public repos"""
         json_payload = self.repos_payload
         public_repos = [
-            repo["name"] for repo in json_payload
+            repo["name"]  for repo in json_payload
             if license is None or self.has_license(repo, license)
         ]
 
