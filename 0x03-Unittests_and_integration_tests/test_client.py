@@ -43,19 +43,19 @@ class TestGithubOrgClient(unittest.TestCase):
                 },
             ],
         }
-        mock.return_value = payload["url"]
+        mock.return_value = payload["repos"]
 
         with patch(
             "client.GithubOrgClient._public_repos_url", new_callable=PropertyMock
         ) as mock_patch:
-            output = [item["name"] for item in payload["repos"]]
-            mock.return_value = payload["repos"]
+            mock_patch.return_value = payload['url']
             github_org = GithubOrgClient("google")
             result = github_org.public_repos()
+            expected = [item["name"] for item in payload["repos"]]
 
-            self.assertEqual(output, result)
+            self.assertEqual(result, expected)
             mock_patch.assert_called_once()
-        mock.assert_called_once()
+            mock.assert_called_once()
 
     @parameterized.expand(
         [
