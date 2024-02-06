@@ -33,14 +33,16 @@ class TestGithubOrgClient(unittest.TestCase):
 
     @patch("client.get_json")
     def test_public_repos(self, mock: MagicMock) -> None:
-        """test public repositories"""
+        """test public repositories method"""
         payload = {
-            "url": "https://api.github.com/users/google/repos",
-            "repos": [
+            'repos_url': "https://api.github.com/users/google/repos",
+            'repos': [
                 {
+                    "id": 1,
                     "name": "google",
                 },
                 {
+                    "id": 2,
                     "name": "george",
                 },
             ],
@@ -50,13 +52,12 @@ class TestGithubOrgClient(unittest.TestCase):
         with patch(
             "client.GithubOrgClient."
             "_public_repos_url", new_callable=PropertyMock
-        ) as mock_patch:
-            mock_patch.return_value = payload["url"]
-            github_org = GithubOrgClient("google")
-            result = github_org.public_repos()
+        ) as mock_url:
+            mock_url.return_value = payload["repos_url"]
+            result = GithubOrgClient("google").public_repos()
             expected = [item["name"] for item in payload["repos"]]
             self.assertEqual(result, expected)
-            mock_patch.assert_called_once()
+            mock_url.assert_called_once()
         mock.assert_called_once()
 
     @parameterized.expand(
@@ -104,6 +105,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             result,
             self.expected_repos,
         )
+        self.mock.assert_called()
 
     def test_public_repos_with_license(self) -> None:
         """test public repositories with license"""
@@ -112,3 +114,4 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             result,
             self.apache2_repos,
         )
+        self.mock.assert_called()
