@@ -9,7 +9,8 @@ from utils import access_nested_map, get_json, memoize
 
 
 class TestAccessNestedMap(unittest.TestCase):
-    """ Blueprint to Tests access nested map """
+    """Blueprint to Tests access nested map"""
+
     @parameterized.expand(
         [
             ({"a": 1}, ("a",), 1),
@@ -20,18 +21,21 @@ class TestAccessNestedMap(unittest.TestCase):
     def test_access_nested_map(
         self, nested_map: Mapping, path: Sequence, expected: int
     ) -> None:
-        """ test access_nested_map"""
+        """test access_nested_map"""
         self.assertEqual(access_nested_map(nested_map, path), expected)
 
     @parameterized.expand([({}, ("a",)), ({"a": 1}, ("a", "b"))])
-    def test_access_nested_map_exception(self, nested_map: Mapping, path: Sequence) -> None:
-        """ Test access_nested_map exception """
+    def test_access_nested_map_exception(
+        self, nested_map: Mapping, path: Sequence
+    ) -> None:
+        """Test access_nested_map exception"""
         with self.assertRaises(KeyError):
             access_nested_map(nested_map, path)
 
 
 class TestGetJson(unittest.TestCase):
-    """ Blueprints to test get_json """
+    """Blueprints to test get_json"""
+
     @parameterized.expand(
         [
             ("http://example.com", {"payload": True}),
@@ -39,7 +43,7 @@ class TestGetJson(unittest.TestCase):
         ]
     )
     def test_get_json(self, url: str, payload: Dict) -> None:
-        """ Test get_json method """
+        """Test get_json method"""
         values = {"json.return_value": payload}
         with patch("requests.get", return_value=Mock(**values)) as mock:
             self.assertEqual(get_json(url), payload)
@@ -47,18 +51,18 @@ class TestGetJson(unittest.TestCase):
 
 
 class TestMemoize(unittest.TestCase):
-    """ Blueprint to test memoization """
+    """Blueprint to test memoization"""
+
     def test_memoize(self) -> None:
-        """ Method to test memoization """
+        """Method to test memoization"""
+
         class TestClass:
-            """ Test class to test memoization """
+
             def a_method(self):
-                """ Return 45 """
                 return 42
 
             @memoize
             def a_property(self):
-                """ cache a_method """
                 return self.a_method()
 
         with patch.object(TestClass, "a_method") as mock:
