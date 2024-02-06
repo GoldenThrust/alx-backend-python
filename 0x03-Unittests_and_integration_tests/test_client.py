@@ -79,8 +79,9 @@ class TestGithubOrgClient(unittest.TestCase):
      "expected_repos", "apache2_repos"), TEST_PAYLOAD
 )
 class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """ Test GitHub API integration """
     @classmethod
-    def setUpClass(cls) -> None:
+    def setUpClass(cls):
         """Set up the integration Test"""
         config = {
             "return_value.json.side_effect": [
@@ -94,11 +95,11 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         cls.mock = cls.get_patcher.start()
 
     @classmethod
-    def tearDownClass(cls) -> None:
+    def tearDownClass(cls):
         """Tear down the Test"""
         cls.get_patcher.stop()
 
-    def test_public_repos(self) -> None:
+    def test_public_repos(self):
         """test public repositories"""
         result = GithubOrgClient("google").public_repos()
         self.assertEqual(
@@ -107,7 +108,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         )
         self.mock.assert_called()
 
-    def test_public_repos_with_license(self) -> None:
+    def test_public_repos_with_license(self):
         """test public repositories with license"""
         result = GithubOrgClient("google").public_repos(license="apache-2.0")
         self.assertEqual(
